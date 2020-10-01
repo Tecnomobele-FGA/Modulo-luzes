@@ -44,7 +44,7 @@ Pinagem do conector DB9 macho para ligar o barramento CAN.
 # Protótipo V1
 Primeiro protótipo montado em setembro 2020.
 
-![](figuras/PCB_ModLuz_v1_esquema.PDF)
+![](figuras/PCB_ModLuz_v1_esquema.png)
 
 ![](figuras/PCB_ModLuz_v1_lado_componentes.png)
 
