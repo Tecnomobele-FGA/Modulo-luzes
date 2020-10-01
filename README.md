@@ -40,3 +40,17 @@ A foto na figura a seguir mostra a caixa PB115 com a proposta de placa de circui
 
 Pinagem do conector DB9 macho para ligar o barramento CAN.
 
+
+# Protótipo V1
+Primeiro protótipo montado em setembro 2020.
+
+![](figuras/PCB_ModLuz_v1_esquema.PDF)
+
+![](figuras/PCB_ModLuz_v1_lado_componentes.png)
+
+
+![](figuras/PCB_ModLuz_v1_lado_solda.png)
+
+![](figuras/PCB_ModLuz_v1_montado_3d.png)
+
+![](figuras/PCB_ModLuz_v1_montado.png)
