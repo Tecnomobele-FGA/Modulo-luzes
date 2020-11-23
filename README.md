@@ -54,3 +54,11 @@ Primeiro protótipo montado em setembro 2020.
 ![](figuras/PCB_ModLuz_v1_montado_3d.png)
 
 ![](figuras/PCB_ModLuz_v1_montado.png)
+
+
+![](fotos/foto_placa_luzes_montado.jpg)
+
+# Programa 
+
+O programa de controle está no repositório 
+[`https://github.com/rudivels/BREletrica_Luzes_CAN_beep_display`](https://github.com/rudivels/BREletrica_Luzes_CAN_beep_display)
