@@ -126,6 +126,8 @@ Continuando com a engenharia reversa... pela lógica o microcontrolador deve est
 Achei o chip...    
 [https://www.infineon.com/cms/en/product/transceivers/automotive-transceiver/automotive-can-transceivers/tle6251ds/](https://www.infineon.com/cms/en/product/transceivers/automotive-transceiver/automotive-can-transceivers/tle6251ds/)
 
+Com o multimetro deu para descobrir a ligação dos pinos do transciever com o conector.
+
 pino 6 canl  está ligado a pino 29 do conector...
 pino 7 canh está no pino 28
 
@@ -177,7 +179,49 @@ e o detalhe da palavra mandado pelo CAN é o seguinte ..  a partir dessa figura 
 Usando a biblioteca do CAN Read Demo do Sparkfun CAN bus shield conseguimos monitorar o barramento. 
 Um programa simples que monitora e imprime.
 
-Segue o dump do que é lido no momento que o painel é ligado.
+```
+#include <Canbus.h>
+#include <defaults.h>
+#include <global.h>
+#include <mcp2515.h>
+#include <mcp2515_defs.h>
+
+
+void setup()
+{
+ Serial.println("CAN Read - Testing receival of CAN Bus message");  
+ delay(500);  
+ if(Canbus.init(CANSPEED_500))  //Initialise MCP2515 CAN controller at the specified speed
+    Serial.println("CAN Init ok");
+ else
+    Serial.println("Can't init CAN");
+}
+
+void loop() {
+ tCAN message;
+ if (mcp2515_check_message()) 
+  {
+    if (mcp2515_get_message(&message)) 
+    {
+               Serial.print("ID: ");
+               Serial.print(message.id,HEX);
+               Serial.print(", ");
+               Serial.print("Data: ");
+               Serial.print(message.header.length,DEC);
+               for(int i=0;i<message.header.length;i++) 
+                { 
+                  Serial.print(message.data[i],HEX);
+                  Serial.print(" ");
+                }
+               Serial.println("");
+     }
+   }
+ }   
+
+```
+
+
+Este programa gera o seguinte dump na porta serial no momento que o painel é ligado.
 
 
 ```
