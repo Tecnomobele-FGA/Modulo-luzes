@@ -2,6 +2,9 @@
 
 `Documentos\GitHub\Modulo-luzes`
 
+
+# 1. Hardware
+ 
 A Van é um veículo fabricado há 10 anos com um sistema de controle de luzes e sinalização convencional baseado em relés e interruptores simples. A conversão da Van para elétrico, também teve que fazer o *redesing* das instalações elétricas do veículo, incorporando toda sinalização e comando de luzes à barramento de comunicação do novo veículo.
 
 Usou-se como base o módulo desenvolvido para o BR800. Este novo módulo foi desenhado para centralizar todos os comandos de luzes e sinalização, aproveitando as teclas e interruptores já existentes no *dashboard* do veículo, mas permitido a sua expansão com elementos não convencionais que podem ser facilmente incorporado na nova configuração tecnológica. O diagrama de blocos a seguir mostra o esquema funcional do novo módulo.
@@ -27,7 +30,7 @@ O layout da placa de circuito impresso (PCB) está na figura a seguir.
 
 ![](figuras/placa_mod_luz.jpg)
 
-## Alojamento e conexões
+## 1.1. Alojamento e conexões
 
 O módulo será alojado numa caixa padrão Patola [PB115](http://www.patola.com.br/index.php?route=product/product&product_id=359) com conectores específicos para cada funcionalidade, com pinagem diferenciados para evitar trocas. Os conectores para display, alimentação 12 volts, CAN também são padronizadas. 
 Convencionou-se que entrada dos sensores e saída dos comandos ficarão na parte de traseira da caixa, enquanto a interface CAN, alimentação, saída para display e acesso para reporgramação do arduino ficarão no frente. A interface CAN será implementado por dois conectores DB9, mantendo o padrão industrial.
@@ -37,12 +40,7 @@ A foto na figura a seguir mostra a caixa PB115 com a proposta de placa de circui
 ![](fotos/foto_placa_luzes.jpg)
 
 
-## Conector CAN
-
-Pinagem do conector DB9 macho para ligar o barramento CAN.
-
-
-# Protótipo V1
+## 1.2. Protótipo V1
 Primeiro protótipo montado em setembro 2020.
 
 ![](figuras/PCB_ModLuz_v1_esquema.png)
@@ -59,13 +57,30 @@ Primeiro protótipo montado em setembro 2020.
 
 ![](fotos/foto_placa_luzes_montado.jpg)
 
-# Programa 
 
-O programa de controle está no repositório 
-[`https://github.com/rudivels/BREletrica_Luzes_CAN_beep_display`](https://github.com/rudivels/BREletrica_Luzes_CAN_beep_display)
+## 1.3. Conector CAN
+
+Pinagem do conector DB9 macho para ligar o barramento CAN.
+
+| pino | função       | 
+|:----:|:------------:|
+| 1 | | 
+| 2 | |
 
 
-# Comando de Luzes
+## 1.3. Conector LCD 
+
+Pinagem do conector mini DIN femea para ligar o LCD.
+
+| pino | função       | 
+|:----:|:------------:|
+| 1 | | 
+| 2 | |
+
+
+
+
+## 1.4 Comando de Luzes
 
 O conector de comando de luzes é formado por um conector de 2x5 pinos (modelo - tipo) com a seguinte especificação.
 Na primeira fileira os pinos:
@@ -97,5 +112,39 @@ Os pinos D3, D4 e D5 comandam o 74HC595
 | D5   | SER   | 14    | serial data input      | 
 
 
+## 1.5 Entrada de Comando
+
+| pino | função |
+|:----:|:-----:|
+| 1 | | 
+| 2 | | 
 
 
+# 2. Programa 
+
+Repositório local
+
+`Arduino\BReletrica\BREletrica_Luzes_CAN_beep_display_2020_11_22` 
+
+O programa de controle está no repositório remoto 
+[`https://github.com/rudivels/BREletrica_Luzes_CAN_beep_display`](https://github.com/rudivels/BREletrica_Luzes_CAN_beep_display)
+
+O programa usa a biblioteca do Sparkfun que implementa as funcionalidades do MCP2551 que implementa as camadas física e enlace.
+
+
+# 3. CANOPEN ou J1939
+
+Apresentar aqui o uso do CANOPEN ou J1939 que vamos usar para implementar as camadas de rede e superior.
+
+Mostrar que CANOPEN e J1939 trabalham nas mesmas camadas, mas que CANOPEN é mais abrangente que SAE J1939 pois envolve todo tipo de rede de controle e automação, enquanto J1939 foi desenvolvido para aplicação em veiculos de industriais. 
+
+Mostrar que este padrão surgiu num mercado restrito para máquinas veículos industriais, que diferentemente dos fabricantes convencionais de veículos de linha de montagem, tinham necessidades de interoperabilidade e conexão com outros fabricantes.  
+
+Mostrar que isso será uma tendência em carros elétricos, ou carros convertidos.
+
+[`https://www.csselectronics.com/screen/page/simple-intro-j1939-explained`](https://www.csselectronics.com/screen/page/simple-intro-j1939-explained)
+
+[`https://www.youtube.com/watch?v=DlbkWryzJqg&feature=emb_rel_end`](https://www.youtube.com/watch?v=DlbkWryzJqg&feature=emb_rel_end)
+
+
+# 3.1. Máquina de estado do J1939
