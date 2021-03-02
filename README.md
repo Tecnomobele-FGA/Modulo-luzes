@@ -62,22 +62,30 @@ Primeiro protótipo montado em setembro 2020.
 
 Pinagem do conector DB9 macho para ligar o barramento CAN.
 
-| pino | função       | 
-|:----:|:------------:|
-| 1 | | 
-| 2 | |
+| pino | função  | 
+|:----:|:-------:|
+| 2    | CAN-L   | 
+| 7    | CAN-H   |
+| 3    | GND     |
+| 9    | 12V     |
 
 
 ## 1.3. Conector LCD 
 
 Pinagem do conector mini DIN femea para ligar o LCD.
 
-| pino | função       | 
-|:----:|:------------:|
-| 1 | | 
-| 2 | |
+| mini Din | função LCD | Arduino |
+|:--------:|:--------:|:-------:|
+|   | RS     | D7 |
+|   | RW     | D8 |
+|   | Enable | D9 |
+|   | Reset  |    |
+|   | beep   | D6 |
 
 
+O beep foi implememtado com o pino D6 do Arduino com um sinal PWM.
+
+`analogWrite(beep, 100);` 
 
 
 ## 1.4 Comando de Luzes
