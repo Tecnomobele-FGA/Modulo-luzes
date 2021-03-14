@@ -40,10 +40,11 @@ A foto na figura a seguir mostra a caixa PB115 com a proposta de placa de circui
 ![](fotos/foto_placa_luzes.jpg)
 
 
+
 ## 1.2. Protótipo V1
 Primeiro protótipo montado em setembro 2020.
 
-![](figuras/PCB_ModLuz_v1_esquema.png)
+![](figuras/PCB_ModLuz_v1_esquema_v2.jpg)
 
 ![](figuras/PCB_ModLuz_v1_lado_componentes.png)
 
@@ -132,7 +133,7 @@ Os pinos D3, D4 e D5 comandam o 74HC595
 
 Repositório local
 
-`Arduino\BReletrica\BREletrica_Luzes_CAN_beep_display_2020_11_22` 
+`Arduino/BReletrica/BREletrica_Luzes_CAN_beep_display_2020_11_22` 
 
 O programa de controle está no repositório remoto 
 [`https://github.com/rudivels/BREletrica_Luzes_CAN_beep_display`](https://github.com/rudivels/BREletrica_Luzes_CAN_beep_display)
@@ -142,17 +143,23 @@ O programa usa a biblioteca do Sparkfun que implementa as funcionalidades do MCP
 
 # 3. CANOPEN ou J1939
 
-Apresentar aqui o uso do CANOPEN ou J1939 que vamos usar para implementar as camadas de rede e superior.
+Uma vez implementado as funcionalidades do LCD, os comandos, as saídas de sinalização e o aviso sonora, pode partir para implementar a funcionalidades de comunicação com o CAN-bus.
+ 
+Para o conversão do BR800 vamos usar o J1939, pois o controlador do motor elétrico usa este protocolo. 
+Enquanto na VAN com o inversor da WEG CVW500 pretende se partir para CANOPEN.
 
-Mostrar que CANOPEN e J1939 trabalham nas mesmas camadas, mas que CANOPEN é mais abrangente que SAE J1939 pois envolve todo tipo de rede de controle e automação, enquanto J1939 foi desenvolvido para aplicação em veiculos de industriais. 
+## 3.1. Protocolo J1939 para o BR800
 
-Mostrar que este padrão surgiu num mercado restrito para máquinas veículos industriais, que diferentemente dos fabricantes convencionais de veículos de linha de montagem, tinham necessidades de interoperabilidade e conexão com outros fabricantes.  
+Não há muita documentação disponível para a implementação do J1939, mas vamos definir que o modulo de luzes deve disponibilizar no barramento CAN a cada segunda os dados do seu estado de funcionamento. 
 
-Mostrar que isso será uma tendência em carros elétricos, ou carros convertidos.
+O tempo de 1 segundo é compatível com alguns padrões J1939 pesquisados. 
+O Parametro Group Number do  grupo de mesnagens de módulo chave seta em alguns documentos é definido como PGN 655535 ou 0xFFFF e manda um bloco de dados de 24 bytes a cada 1000 ms. 
+Não tem nenhuma padronização da mensagem e pelo visto cada fabricante implementa o seu.
 
-[`https://www.csselectronics.com/screen/page/simple-intro-j1939-explained`](https://www.csselectronics.com/screen/page/simple-intro-j1939-explained)
-
-[`https://www.youtube.com/watch?v=DlbkWryzJqg&feature=emb_rel_end`](https://www.youtube.com/watch?v=DlbkWryzJqg&feature=emb_rel_end)
+Veja o trabalho de Borth, T. F. (2016). Analisando os Impactos do Uso do Protocolo Can FD em Aplicaçõees Automotivas – Estudo de Caso. Dissertação de mestrado em engenharia eléetrica, Universidade Federal do Rio Grande do Sul. (páginda 67) 
 
 
-# 3.1. Máquina de estado do J1939
+Vamos apresentar um Database CAN DBC dos dados que o módulo transmitirá no barramento CAN. 
+
+
+## 3.2. Protocolo CANOPEN para Tecnomobele
