@@ -75,13 +75,15 @@ Pinagem do conector DB9 macho para ligar o barramento CAN.
 
 Pinagem do conector mini DIN femea para ligar o LCD.
 
-| mini Din | função LCD | Arduino |
+| mini Din | função LCD | Origem  |
 |:--------:|:--------:|:-------:|
-|   | RS     | D7 |
-|   | RW     | D8 |
-|   | Enable | D9 |
-|   | Reset  |    |
-|   | beep   | D6 |
+|   | RS     | D7 Arduino |
+|   | RW     | D8 Arduino |
+|   | Enable | D9 Arduino| 
+|   | Reset  | QH1 do 74HC595  |
+|   | Vcc    | Vcc  do Arduino | 
+|   | GND    | Fomte   | 
+|   | Vo     | Trimpot |
 
 
 O beep foi implememtado com o pino D6 do Arduino com um sinal PWM.
@@ -125,41 +127,86 @@ Os pinos D3, D4 e D5 comandam o 74HC595
 
 | pino | função |
 |:----:|:-----:|
-| 1 | | 
-| 2 | | 
+|  | FarolBaixo  |
+|  | FarolAlto   |
+|  | SetaEsquerda |
+|  | SetaDireita |
+|  | PiscaAlerta |
+|  | FreioDeMao  |
+|  | LuzDeFreio  |
+|  | LuzRe       |
 
 
-# 2. Programa 
+# 2. Implementação da programação  
 
-Repositório local
+O programa implementado está no repositório local
 
 `Arduino/BReletrica/BREletrica_Luzes_CAN_beep_display_2020_11_22` 
 
-O programa de controle está no repositório remoto 
+e no  repositório remoto 
 [`https://github.com/rudivels/BREletrica_Luzes_CAN_beep_display`](https://github.com/rudivels/BREletrica_Luzes_CAN_beep_display)
 
 O programa usa a biblioteca do Sparkfun que implementa as funcionalidades do MCP2551 que implementa as camadas física e enlace.
 
 
-# 3. CANOPEN ou J1939
+A programação do modulo de luzes pode ser dividido em rotina de controle de sinalização, rotina de monitoramento de potência e consumo, rotina de mostar os dados no paiel, comunicação CAN que rodam parelela no Arduino.
 
-Uma vez implementado as funcionalidades do LCD, os comandos, as saídas de sinalização e o aviso sonora, pode partir para implementar a funcionalidades de comunicação com o CAN-bus.
- 
-Para o conversão do BR800 vamos usar o J1939, pois o controlador do motor elétrico usa este protocolo. 
-Enquanto na VAN com o inversor da WEG CVW500 pretende se partir para CANOPEN.
+Os requisitos do tempo de atualização dos variaveis foram obtidas da documentação do Protocolo J1939, que define esses tempos para a maioria das variáveis.
 
-## 3.1. Protocolo J1939 para o BR800
+## 2.1. Rotina de controle de sinalização 
+A rotina de sinalização monitora as diversas chaves e botões no painel do veículo e comando as saídas de luzes e sinal sonoro respectivamente.
+São ao total 8 entradas 7 saídas de lampadas, além de um sinal sonoro (beep). 
+
+Não há um valor mínima definida para taxa de amostragem, mas procura-se manter o tempo na ordem de meio segundo ou menor. 
+
+Além disso, a rotina disponibilizará os seguintes dados para comunicação via CAN
 
 Não há muita documentação disponível para a implementação do J1939, mas vamos definir que o modulo de luzes deve disponibilizar no barramento CAN a cada segunda os dados do seu estado de funcionamento. 
 
-O tempo de 1 segundo é compatível com alguns padrões J1939 pesquisados. 
+O tempo de 1 segundo é compatível com alguns padrões J1939 pesquisadas. 
 O Parametro Group Number do  grupo de mesnagens de módulo chave seta em alguns documentos é definido como PGN 655535 ou 0xFFFF e manda um bloco de dados de 24 bytes a cada 1000 ms. 
-Não tem nenhuma padronização da mensagem e pelo visto cada fabricante implementa o seu.
+Não tem nenhuma padronização da mensagem e pelo visto cada fabricante implementa o seu
 
+## 2.2. Rotina para mostrar dados no painel 
+
+A rotina para mostrar os dados no LCD no paiel é praticamente a mesma rotina de sinalização. Ela tem as mesmas entradas e a diferença é que as saídas são no display.
+
+A atualização dos dados é no mínimo a uma frequencia de 3Hz.
+
+Os dados do monitoramento de potêcia e consumo não serão mostrados no painel para não sobrecarregar a visualização dos dados.
+
+## 2.3. Monitoramento de potência e consumo
+A rotina de medição de potência e consumo avalia a cada segundo a tensão e a corrente elétrica consumida pelo módulo.
+
+As entradas são:
+
+- tensão 12 v (analógica), 1 byte, 0-20V
+- corrente 12v (analógica), 1 byte, 0 - 5 Amp
+
+As saídas da rotina são as mesmas das entradas acrescidas de
+
+- potência 12v (analógica), 1 byte , 0-100W
+- Consumo acumulada, 2 bytes, 0 - 1000kWh
+- Alarme tensão baixa 12v, bit
+
+Os dados de entrada e sáida também vão ser disponibilizados no barramento CAN a uma taxa de 1000 ms.
+
+Ainda não se descobriu um PGN que já tem algum padrão para este tipo de dados.  
+
+
+## 2.4. Comunicação CAN J1939
+
+A rotina de comunicação J1939 deve implementar dos PGNs que devem mandar as mensagem a cada 1000 ms. 
+
+Ainda não há uma definição se o módulo vai receber alguma informação ou algum comando do barramento CAN. 
+
+A principio não ha necessidade de receber dados dos demais subsistemas.
+
+- PGN 65355 ou 0xFFFF  (modulo chave seta)
+- PGN ?????  monitoramento tensão, corrente,potência e consumo
+
+# 3. Protocolo CANOPEN para Tecnomobele
+
+
+# Bibliografia 
 Veja o trabalho de Borth, T. F. (2016). Analisando os Impactos do Uso do Protocolo Can FD em Aplicaçõees Automotivas – Estudo de Caso. Dissertação de mestrado em engenharia eléetrica, Universidade Federal do Rio Grande do Sul. (páginda 67) 
-
-
-Vamos apresentar um Database CAN DBC dos dados que o módulo transmitirá no barramento CAN. 
-
-
-## 3.2. Protocolo CANOPEN para Tecnomobele
